@@ -1,0 +1,17 @@
+{
+  "name": "whatsapp",
+  "version": "1.0.1",
+  "description": "Whatsapp clone",
+  "main": "index.js",
+  "author": "Cirstea Marcu-Eduard",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon ./src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4"
+  }
+}

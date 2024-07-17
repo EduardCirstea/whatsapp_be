@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import bcrypt from "bcrypt";
 
 const userSchema = mongoose.Schema(
   {
@@ -35,7 +36,19 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
+userSchema.pre("save", async function (next) {
+  try {
+    if (this.isNew) {
+      const salt = await bcrypt.genSalt(12);
+      const hashPassword = await bcrypt.hash(this.password, salt);
+      this.password = hashPassword;
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 const UserModel =
   mongoose.models.UserModel || mongoose.model("UserModel", userSchema);
+
 export default UserModel;

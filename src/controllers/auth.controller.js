@@ -6,7 +6,6 @@ import { findUser } from "../services/user.services.js";
 export const register = async (req, res, next) => {
   try {
     const { name, email, picture, status, password } = req.body;
-    // console.log(name, email, picture, status, password);
     const newUser = await createUser({
       name,
       email,
@@ -35,7 +34,7 @@ export const register = async (req, res, next) => {
     res.json({
       message: "register success",
       user: {
-        access_token,
+        token: access_token,
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
@@ -78,7 +77,7 @@ export const login = async (req, res, next) => {
         email: user.email,
         status: user.status,
         picture: user.picture,
-        access_token,
+        token: access_token,
       },
     });
   } catch (error) {
@@ -118,7 +117,7 @@ export const refreshToken = async (req, res, next) => {
         email: user.email,
         status: user.status,
         picture: user.picture,
-        access_token,
+        token: access_token,
       },
     });
   } catch (error) {

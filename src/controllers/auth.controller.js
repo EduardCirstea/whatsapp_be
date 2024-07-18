@@ -34,8 +34,8 @@ export const register = async (req, res, next) => {
     console.table({ access_token, refresh_token });
     res.json({
       message: "register success",
-      access_token,
       user: {
+        access_token,
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
@@ -72,13 +72,13 @@ export const login = async (req, res, next) => {
     console.table({ access_token, refresh_token });
     res.json({
       message: "loggin success",
-      access_token,
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
         status: user.status,
         picture: user.picture,
+        access_token,
       },
     });
   } catch (error) {
@@ -112,13 +112,13 @@ export const refreshToken = async (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET
     );
     res.json({
-      access_token,
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
         status: user.status,
         picture: user.picture,
+        access_token,
       },
     });
   } catch (error) {

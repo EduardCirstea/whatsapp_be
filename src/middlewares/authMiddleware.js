@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
 export default async function (req, res, next) {
-  if (!red.headers["authorization"])
+  if (!req.headers["authorization"])
     return next(createHttpError.Unauthorized());
   const bearerToken = req.headers["authorization"];
   const token = bearerToken.split(" ")[1];

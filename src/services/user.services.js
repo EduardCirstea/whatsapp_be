@@ -16,6 +16,8 @@ export const searchUsers = async (keyword) => {
         email: { $regex: keyword, $options: "i" },
       },
     ],
+  }).find({
+    _id: { $ne: userId },
   });
   return users;
 };

@@ -7,6 +7,7 @@ import {
   getUserConversations,
 } from "../services/conversation.service.js";
 import { findUser } from "../services/user.services.js";
+
 export const create_open_conversation = async (req, res, next) => {
   try {
     const sender_id = req.user.userId;
@@ -30,6 +31,7 @@ export const create_open_conversation = async (req, res, next) => {
       let receiver_user = await findUser(receiver_id);
       let convoData = {
         name: receiver_user.name,
+        picture: receiver_user.picture,
         isGroup: false,
         users: [sender_id, receiver_id],
       };

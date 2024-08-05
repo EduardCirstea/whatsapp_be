@@ -1,0 +1,23 @@
+export default function (socket) {
+  //user joins or opens the application
+  socket.on("join", (user) => {
+    socket.join(user);
+  });
+  //join a conversation room
+  socket.on("join conversation", (conversation) => {
+    socket.join(conversation);
+
+    console.log("user has joined conversation", conversation);
+  });
+
+  //send/receive message
+  socket.on("send message", (message) => {
+    console.log("new msg ----", message);
+    let conversation = message.conversation;
+    if (!conversation.users) return;
+    conversation.users.forEach((user) => {
+      if (user._id === message.sender._id) return;
+      socket.in(user._id).emit("message received", message);
+    });
+  });
+}

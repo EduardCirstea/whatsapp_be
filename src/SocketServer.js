@@ -3,16 +3,17 @@ export default function (socket, io) {
   //user joins or opens the application
   socket.on("join", (user) => {
     socket.join(user);
-    //add users to online users
+    //add joined user to online users
     if (!onlineUsers.some((u) => u.userId === user)) {
-      console.log(`user ${user} is now online`);
       onlineUsers.push({ userId: user, socketId: socket.id });
     }
-    //send online users to client side
+    //send online users to frontend
     io.emit("get-online-users", onlineUsers);
+    //send socket id
+    io.emit("setup socket", socket.id);
   });
 
-  // socket disconnected
+  //socket disconnect
   socket.on("disconnect", () => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
     io.emit("get-online-users", onlineUsers);
@@ -21,11 +22,9 @@ export default function (socket, io) {
   //join a conversation room
   socket.on("join conversation", (conversation) => {
     socket.join(conversation);
-
-    console.log("user has joined conversation", conversation);
   });
 
-  //send/receive message
+  //send and receive message
   socket.on("send message", (message) => {
     let conversation = message.conversation;
     if (!conversation.users) return;
@@ -41,5 +40,27 @@ export default function (socket, io) {
   });
   socket.on("stop typing", (conversation) => {
     socket.in(conversation).emit("stop typing");
+  });
+
+  //call
+  //---call user
+  socket.on("call user", (data) => {
+    let userId = data.userToCall;
+    let userSocketId = onlineUsers.find((user) => user.userId == userId);
+    io.to(userSocketId.socketId).emit("call user", {
+      signal: data.signal,
+      from: data.from,
+      name: data.name,
+      picture: data.picture,
+    });
+  });
+  //---answer call
+  socket.on("answer call", (data) => {
+    io.to(data.to).emit("call accepted", data.signal);
+  });
+
+  //---end call
+  socket.on("end call", (id) => {
+    io.to(id).emit("end call");
   });
 }
